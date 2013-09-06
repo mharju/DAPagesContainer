@@ -127,8 +127,9 @@
     NSAssert(selectedIndex < self.viewControllers.count, @"selectedIndex should belong within the range of the view controllers array");
     UIButton *previosSelectdItem = self.topBar.itemViews[self.selectedIndex];
     UIButton *nextSelectdItem = self.topBar.itemViews[selectedIndex];
-    self.topBar.selectedIndex = selectedIndex;
     
+    self.topBar.selectedItemBackgroundView.frame = [self.topBar frameForSelectionBackgroundInIndex:selectedIndex];
+
     if (abs(self.selectedIndex - selectedIndex) <= 1) {
         [self.scrollView setContentOffset:CGPointMake(selectedIndex * self.scrollWidth, 0.) animated:animated];
         if (selectedIndex == _selectedIndex) {
@@ -167,6 +168,8 @@
             self.topBar.scrollView.contentOffset = [self.topBar contentOffsetForSelectedItemAtIndex:selectedIndex];
             [previosSelectdItem setTitleColor:self.pageItemsTitleColor forState:UIControlStateNormal];
             [nextSelectdItem setTitleColor:self.selectedPageItemTitleColor forState:UIControlStateNormal];
+            
+            self.topBar.selectedItemBackgroundView.frame = [self.topBar frameForSelectionBackgroundInIndex:selectedIndex];
         } completion:^(BOOL finished) {
             for (NSUInteger i = 0; i < self.viewControllers.count; i++) {
                 UIViewController *viewController = self.viewControllers[i];
@@ -388,7 +391,7 @@
             [nextSelectedItem setTitleColor:next forState:UIControlStateNormal];
 
             
-            
+            CGRect targetFrame, frame;
             if (scrollingTowards) {
                 self.topBar.scrollView.contentOffset = CGPointMake(previousItemContentOffsetX +
                                                                    (nextItemContentOffsetX - previousItemContentOffsetX) * ratio , 0.);
@@ -396,13 +399,24 @@
                                         (nextItemPageIndicatorX - previousItemPageIndicatorX) * ratio,
                                                             self.pageIndicatorView.center.y);
   
+                targetFrame = [self.topBar frameForSelectionBackgroundInIndex:targetIndex];
+                frame = [self.topBar frameForSelectionBackgroundInIndex:targetIndex-1];
+                frame.origin.x += (targetFrame.origin.x - frame.origin.x) * ratio;
+                frame.size.width += (targetFrame.size.width - frame.size.width) * ratio;
             } else {
                 self.topBar.scrollView.contentOffset = CGPointMake(previousItemContentOffsetX -
                                                                    (nextItemContentOffsetX - previousItemContentOffsetX) * ratio , 0.);
                 self.pageIndicatorView.center = CGPointMake(previousItemPageIndicatorX -
                                         (nextItemPageIndicatorX - previousItemPageIndicatorX) * ratio,
                                                             self.pageIndicatorView.center.y);
+                
+                targetFrame = [self.topBar frameForSelectionBackgroundInIndex:targetIndex];
+                frame = [self.topBar frameForSelectionBackgroundInIndex:targetIndex+1];
+                frame.origin.x -= (targetFrame.origin.x - frame.origin.x) * ratio;
+                frame.size.width -= (targetFrame.size.width - frame.size.width) * ratio;
             }
+
+            self.topBar.selectedItemBackgroundView.frame = frame;
         }
     }
 }

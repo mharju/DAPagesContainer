@@ -35,7 +35,7 @@ CGFloat const DAPagesContainerTopBarItemsOffset = 30.;
         self.font = [UIFont systemFontOfSize:14];
         self.itemTitleColor = [UIColor whiteColor];
         
-        self.selectedItemBackgroundView = [[UIView alloc] init];
+        self.selectedItemBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
         [self.scrollView addSubview:self.selectedItemBackgroundView];
     }
     return self;
@@ -43,10 +43,8 @@ CGFloat const DAPagesContainerTopBarItemsOffset = 30.;
 
 #pragma mark - Public
 
-- (void) setSelectedIndex:(NSInteger)selectedIndex
+- (CGRect) frameForSelectionBackgroundInIndex:(NSInteger)selectedIndex
 {
-    _selectedIndex = selectedIndex;
-    
     CGRect selectedItemFrame = CGRectZero;
     if(selectedIndex > 0) {
         CGRect previousFrame = ((UIView*)self.itemViews[selectedIndex-1]).frame;
@@ -65,10 +63,8 @@ CGFloat const DAPagesContainerTopBarItemsOffset = 30.;
         CGFloat width = selected.frame.origin.x + selected.frame.size.width - selectedItemFrame.origin.x + 20.0;
         selectedItemFrame.size = CGSizeMake(width, selected.frame.size.height);
     }
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        self.selectedItemBackgroundView.frame = selectedItemFrame;
-    }];
+
+    return selectedItemFrame;
 }
 
 - (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index
