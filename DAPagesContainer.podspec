@@ -8,4 +8,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/mharju/DAPagesContainer.git" }
   s.platform     = :ios, '5.0'
   s.source_files = 'DAPagesContainer/**/*.{h,m}'
+  s.requires_arc = true
 end
