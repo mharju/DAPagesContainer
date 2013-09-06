@@ -168,8 +168,6 @@
             self.topBar.scrollView.contentOffset = [self.topBar contentOffsetForSelectedItemAtIndex:selectedIndex];
             [previosSelectdItem setTitleColor:self.pageItemsTitleColor forState:UIControlStateNormal];
             [nextSelectdItem setTitleColor:self.selectedPageItemTitleColor forState:UIControlStateNormal];
-            
-            self.topBar.selectedItemBackgroundView.frame = [self.topBar frameForSelectionBackgroundInIndex:selectedIndex];
         } completion:^(BOOL finished) {
             for (NSUInteger i = 0; i < self.viewControllers.count; i++) {
                 UIViewController *viewController = self.viewControllers[i];
