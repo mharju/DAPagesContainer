@@ -25,7 +25,9 @@
 @property (strong, nonatomic) UIFont *font;
 @property (readonly, strong, nonatomic) NSArray *itemViews;
 @property (readonly, strong, nonatomic) UIScrollView *scrollView;
+@property (strong, nonatomic) UIView *selectedItemBackgroundView;
 @property (weak, nonatomic) id<DAPagesContainerTopBarDelegate> delegate;
+@property (nonatomic, assign) NSInteger selectedIndex;
 
 - (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index;
 - (CGPoint)contentOffsetForSelectedItemAtIndex:(NSUInteger)index;

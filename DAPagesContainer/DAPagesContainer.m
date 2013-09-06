@@ -83,6 +83,7 @@
     self.scrollView.delegate = self;
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.scrollView];
     [self startObservingContentOffsetForScrollView:self.scrollView];    
 
@@ -100,7 +101,8 @@
                                                                                    self.pageIndicatorViewSize.width,
                                                                                    self.pageIndicatorViewSize.height)];
     [self.view addSubview:self.pageIndicatorView];
-    self.topBar.backgroundColor = self.pageIndicatorView.color = self.topBarBackgroundColor;
+    self.topBar.backgroundColor = self.topBarBackgroundColor;
+    self.pageIndicatorView.color = self.selectedPageItemBackgroundColor;
 }
 
 - (void)viewDidUnload
@@ -125,12 +127,15 @@
     NSAssert(selectedIndex < self.viewControllers.count, @"selectedIndex should belong within the range of the view controllers array");
     UIButton *previosSelectdItem = self.topBar.itemViews[self.selectedIndex];
     UIButton *nextSelectdItem = self.topBar.itemViews[selectedIndex];
+    self.topBar.selectedIndex = selectedIndex;
+    
     if (abs(self.selectedIndex - selectedIndex) <= 1) {
         [self.scrollView setContentOffset:CGPointMake(selectedIndex * self.scrollWidth, 0.) animated:animated];
         if (selectedIndex == _selectedIndex) {
             self.pageIndicatorView.center = CGPointMake([self.topBar centerForSelectedItemAtIndex:selectedIndex].x,
                                                         self.pageIndicatorView.center.y);
         }
+        
         [UIView animateWithDuration:(animated) ? 0.3 : 0. delay:0. options:UIViewAnimationOptionBeginFromCurrentState animations:^
          {
              [previosSelectdItem setTitleColor:self.pageItemsTitleColor forState:UIControlStateNormal];
@@ -201,6 +206,13 @@
     }
 }
 
+- (void) setSelectedPageItemBackgroundColor:(UIColor *)selectedPageItemBackgroundColor
+{
+    _selectedPageItemBackgroundColor = selectedPageItemBackgroundColor;
+    self.topBar.selectedItemBackgroundView.backgroundColor = selectedPageItemBackgroundColor;
+    self.pageIndicatorView.color = selectedPageItemBackgroundColor;
+}
+
 - (void)setSelectedIndex:(NSUInteger)selectedIndex
 {
     [self setSelectedIndex:selectedIndex animated:NO];
@@ -218,7 +230,7 @@
 {
     _topBarBackgroundColor = topBarBackgroundColor;
     self.topBar.backgroundColor = topBarBackgroundColor;
-    self.pageIndicatorView.color = topBarBackgroundColor;
+;
 }
 
 - (void)setTopBarHeight:(NSUInteger)topBarHeight
@@ -237,7 +249,7 @@
 - (void)setViewControllers:(NSArray *)viewControllers
 {
     if (_viewControllers != viewControllers) {
-        _viewControllers = viewControllers;
+        _viewControllers = [viewControllers copy];
         self.topBar.itemTitles = [viewControllers valueForKey:@"title"];
         for (UIViewController *viewController in viewControllers) {
             [viewController willMoveToParentViewController:self];
@@ -266,6 +278,11 @@
         viewController.view.frame = CGRectMake(x, 0, CGRectGetWidth(self.scrollView.frame), self.scrollHeight);
         x += CGRectGetWidth(self.scrollView.frame);
     }
+    
+    CGRect scrollViewFrame = self.scrollView.frame;
+    scrollViewFrame.origin.y = self.topBar.frame.origin.y + self.topBar.frame.size.height;
+    self.scrollView.frame = scrollViewFrame;
+    
     self.scrollView.contentSize = CGSizeMake(x, self.scrollHeight);
     [self.scrollView setContentOffset:CGPointMake(self.selectedIndex * self.scrollWidth, 0.) animated:YES];
     self.pageIndicatorView.center = CGPointMake([self.topBar centerForSelectedItemAtIndex:self.selectedIndex].x,

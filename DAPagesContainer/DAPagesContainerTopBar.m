@@ -34,11 +34,42 @@ CGFloat const DAPagesContainerTopBarItemsOffset = 30.;
         [self addSubview:self.scrollView];
         self.font = [UIFont systemFontOfSize:14];
         self.itemTitleColor = [UIColor whiteColor];
+        
+        self.selectedItemBackgroundView = [[UIView alloc] init];
+        [self.scrollView addSubview:self.selectedItemBackgroundView];
     }
     return self;
 }
 
 #pragma mark - Public
+
+- (void) setSelectedIndex:(NSInteger)selectedIndex
+{
+    _selectedIndex = selectedIndex;
+    
+    CGRect selectedItemFrame = CGRectZero;
+    if(selectedIndex > 0) {
+        CGRect previousFrame = ((UIView*)self.itemViews[selectedIndex-1]).frame;
+        selectedItemFrame.origin = CGPointMake(previousFrame.origin.x + previousFrame.size.width + 10.0,
+                                               0);
+    } else {
+        selectedItemFrame.origin = CGPointMake(((UIView*)self.itemViews[selectedIndex]).frame.origin.x - 20.0, 0);
+    }
+    
+    if(selectedIndex < self.itemViews.count - 1) {
+        CGRect nextFrame = ((UIView*)self.itemViews[selectedIndex+1]).frame;
+        selectedItemFrame.size = CGSizeMake(nextFrame.origin.x - selectedItemFrame.origin.x - 10.0,
+                                            nextFrame.size.height);
+    } else {
+        UIView *selected = ((UIView*)self.itemViews[selectedIndex]);
+        CGFloat width = selected.frame.origin.x + selected.frame.size.width - selectedItemFrame.origin.x + 20.0;
+        selectedItemFrame.size = CGSizeMake(width, selected.frame.size.height);
+    }
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        self.selectedItemBackgroundView.frame = selectedItemFrame;
+    }];
+}
 
 - (CGPoint)centerForSelectedItemAtIndex:(NSUInteger)index
 {

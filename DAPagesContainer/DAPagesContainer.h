@@ -59,6 +59,8 @@
  */
 @property (strong, nonatomic) UIColor *selectedPageItemTitleColor;
 
+@property (strong, nonatomic) UIColor *selectedPageItemBackgroundColor;
+
 /**
  Changes 'selectedIndex' property value and navigates to the newly selected view controller
  @param selectedIndex This mathod throws exeption if selectedIndex is out of range of the 'viewControllers' array
