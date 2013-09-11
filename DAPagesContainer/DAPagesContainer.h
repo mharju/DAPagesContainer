@@ -74,4 +74,6 @@
  */
 - (void)updateLayoutForNewOrientation:(UIInterfaceOrientation)orientation;
 
+- (void) updateHeight:(CGFloat)newHeight;
+
 @end

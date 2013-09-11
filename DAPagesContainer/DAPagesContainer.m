@@ -292,6 +292,22 @@
     self.scrollView.userInteractionEnabled = YES;
 }
 
+- (void) updateHeight:(CGFloat)newHeight
+{
+    CGRect frame = self.scrollView.frame;
+    frame.size.height = newHeight;
+    frame.origin.y = self.topBarHeight;
+    self.scrollView.frame = frame;
+    CGSize size = self.scrollView.contentSize;
+    size.height = newHeight;
+    self.scrollView.contentSize = size;
+    for (UIViewController *viewController in self.viewControllers) {
+        frame = viewController.view.frame;
+        frame.size.height = newHeight;
+        viewController.view.frame = frame;
+    }
+}
+
 - (CGFloat)scrollHeight
 {
     return CGRectGetHeight(self.view.frame) - self.topBarHeight;
