@@ -84,6 +84,7 @@
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.backgroundColor = [UIColor clearColor];
+    
     [self.view addSubview:self.scrollView];
     [self startObservingContentOffsetForScrollView:self.scrollView];    
 
@@ -128,9 +129,8 @@
     UIButton *previosSelectdItem = self.topBar.itemViews[self.selectedIndex];
     UIButton *nextSelectdItem = self.topBar.itemViews[selectedIndex];
     
-    self.topBar.selectedItemBackgroundView.frame = [self.topBar frameForSelectionBackgroundInIndex:selectedIndex];
-
     if (abs(self.selectedIndex - selectedIndex) <= 1) {
+        self.topBar.selectedItemBackgroundView.frame = [self.topBar frameForSelectionBackgroundInIndex:selectedIndex];
         [self.scrollView setContentOffset:CGPointMake(selectedIndex * self.scrollWidth, 0.) animated:animated];
         if (selectedIndex == _selectedIndex) {
             self.pageIndicatorView.center = CGPointMake([self.topBar centerForSelectedItemAtIndex:selectedIndex].x,
@@ -165,6 +165,7 @@
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             self.pageIndicatorView.center = CGPointMake([self.topBar centerForSelectedItemAtIndex:selectedIndex].x,
                                                         self.pageIndicatorView.center.y);
+            self.topBar.selectedItemBackgroundView.frame = [self.topBar frameForSelectionBackgroundInIndex:selectedIndex];
             self.topBar.scrollView.contentOffset = [self.topBar contentOffsetForSelectedItemAtIndex:selectedIndex];
             [previosSelectdItem setTitleColor:self.pageItemsTitleColor forState:UIControlStateNormal];
             [nextSelectdItem setTitleColor:self.selectedPageItemTitleColor forState:UIControlStateNormal];
@@ -179,6 +180,9 @@
             self.scrollView.userInteractionEnabled = YES;
             self.shouldObserveContentOffset = YES;
         }];
+    }
+    if(self.selectedIndexChangedBlock){
+        self.selectedIndexChangedBlock(_selectedIndex, selectedIndex);
     }
     _selectedIndex = selectedIndex;
 }
