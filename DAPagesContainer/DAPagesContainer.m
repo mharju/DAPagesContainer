@@ -269,6 +269,14 @@
     }
 }
 
+- (void) topBarShadow:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius opacity:(CGFloat)opacity
+{
+    self.topBar.layer.shadowColor = color.CGColor;
+    self.topBar.layer.shadowOffset = offset;
+    self.topBar.layer.shadowRadius = radius;
+    self.topBar.layer.shadowOpacity = opacity;
+}
+
 #pragma mark - Private
 
 - (void)layoutSubviews
@@ -307,7 +315,8 @@
     self.scrollView.contentSize = size;
     for (UIViewController *viewController in self.viewControllers) {
         frame = viewController.view.frame;
-        frame.size.height = newHeight;
+        // 40px reduction from height, seems to work by experiment
+        frame.size.height = newHeight - 40.0;
         viewController.view.frame = frame;
     }
 }

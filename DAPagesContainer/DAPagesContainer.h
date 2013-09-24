@@ -63,6 +63,8 @@
 
 @property (strong, nonatomic) void (^selectedIndexChangedBlock)(NSInteger previous, NSInteger current);
 
+- (void) topBarShadow:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius opacity:(CGFloat)opacity;
+                                                                                            
 /**
  Changes 'selectedIndex' property value and navigates to the newly selected view controller
  @param selectedIndex This mathod throws exeption if selectedIndex is out of range of the 'viewControllers' array
