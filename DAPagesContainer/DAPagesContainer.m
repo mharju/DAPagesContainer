@@ -148,6 +148,8 @@
         self.selectedIndexChangedBlock(_selectedIndex, selectedIndex);
     }
     
+    if(!animated) { self.scrollView.userInteractionEnabled = YES; }
+    
     _selectedIndex = selectedIndex;
 }
 
